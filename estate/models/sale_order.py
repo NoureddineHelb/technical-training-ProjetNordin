@@ -18,3 +18,4 @@ class SaleOrder(models.Model):
                     'stop': end_datetime,
                     'partner_ids': [(4, line.employee_id.id)],
                 })
+                event.write({'partner_ids': [(4, line.employee_id.id)]})
