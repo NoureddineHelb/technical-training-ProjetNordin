@@ -16,6 +16,6 @@ class SaleOrder(models.Model):
                     'name': 'Formation - %s' % line.name,
                     'start': start_datetime,
                     'stop': end_datetime,
-                    'partner_ids': [(4, line.employee_id.id)],
+                    'partner_ids': [(4, line.employee_id.partner_id.id)],
                 })
-                event.write({'partner_ids': [(4, line.employee_id.id)]})
+                line.employee_id.calendar_id = event.id
