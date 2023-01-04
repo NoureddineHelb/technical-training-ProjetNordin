@@ -25,5 +25,9 @@ class SaleOrder(models.Model):
                     'stop': end_datetime,
                     'partner_ids': [(4, line.employee_id.address_home_id.id)],
                 })
-                line.employee_id.calendar_id = event.id
+                self.env['calendar.attendee'].create({
+                    'event_id': event.id,
+                    'partner_id': line.employee_id.partner_id.id,
+                })
+
 
