@@ -23,6 +23,9 @@ class SaleOrder(models.Model):
                     'start': start_datetime,
                     'stop': end_datetime,
                     'partner_ids': [(4, line.employee_id.id)],
+                    'participant_ids': [(4, line.employee_id.id)],
                     'privacy': 'confidential',
                     'user_id': user_id,
                 })
+
+
