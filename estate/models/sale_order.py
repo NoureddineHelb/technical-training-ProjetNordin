@@ -10,24 +10,19 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_confirm()
         for line in self.order_line:
             if line.employee_id:
-                if not line.employee_id.address_home_id:
-                    partner = self.env['res.partner'].create({
-                        'name': line.employee_id.name,
-                        'email': line.employee_id.work_email,
-                        'phone': line.employee_id.work_phone,
-                    })
-                    line.employee_id.address_home_id = partner.id
                 start_datetime = fields.Datetime.to_string(line.training_date)
                 end_datetime = fields.Datetime.from_string(start_datetime) + timedelta(hours=8)
+                if line.employee_id.user_id:
+                    user_id = line.employee_id.user_id.id
+                else:
+                    # utilisez l'ID de l'utilisateur actuel ou définissez-le sur False si vous ne voulez pas de l'événement dans le calendrier de quiconque
+                    user_id = self.env.user.id
+
                 event = self.env['calendar.event'].create({
                     'name': 'Formation - %s' % line.name,
                     'start': start_datetime,
                     'stop': end_datetime,
-                    'partner_ids': [(4, line.employee_id.address_home_id.id)],
+                    'partner_ids': [(4, line.employee_id.id)],
+                    'privacy': 'confidential',
+                    'user_id': user_id,
                 })
-                self.env['calendar.attendee'].create({
-                    'event_id': event.id,
-                    'partner_id': line.employee_id.partner_id.id,
-                })
-
-
