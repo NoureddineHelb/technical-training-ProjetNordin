@@ -15,10 +15,10 @@ class SaleOrder(models.Model):
                 if line.employee_id.user_id:
                     user_id = line.employee_id.user_id.id
                 else:
-                    # utilisez l'ID de l'utilisateur actuel ou définissez-le sur False si vous ne voulez pas de l'événement dans le calendrier de quiconque
+                    # utilise l'ID de l'utilisateur actuel ou définit False si tu ne veux pas d'événement dans le calendrier de quiconque
                     user_id = self.env.user.id
 
-                event = self.env['calendar.event'].create({
+                vals = {
                     'name': 'Formation - %s' % line.name,
                     'start': start_datetime,
                     'stop': end_datetime,
@@ -26,6 +26,14 @@ class SaleOrder(models.Model):
                     'participant_ids': [(4, line.employee_id.id)],
                     'privacy': 'confidential',
                     'user_id': user_id,
-                })
+                }
+                event = self.env['calendar.event'].create(vals)
+                if not event:
+                    raise ValueError("L'événement n'a pas été créé correctement !")
+                if event.partner_ids != [(4, line.employee_id.id)] or event.participant_ids != [
+                    (4, line.employee_id.id)]:
+                    raise ValueError("L'événement n'a pas été attribué correctement aux participants !")
+
+
 
 
