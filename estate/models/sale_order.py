@@ -8,13 +8,6 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     manager_level = fields.Selection(related='partner_id.manager_level')
-    state = fields.Selection([
-        ('draft', 'Brouillon'),
-        ('waiting_approval', 'En attente d\'approbation'),
-        ('approved', 'Approuvé'),
-        ('done', 'Terminé'),
-        ('cancel', 'Annulé'),
-    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
@@ -51,20 +44,20 @@ class SaleOrder(models.Model):
                 super().action_confirm()
             else:
                 # message d'erreur
-                self.state = 'waiting_approval'
+                self.write({'state': 'waiting_approval'})
                 raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
 
         elif 2000 <= self.amount_total < 5000:
             if self.partner_id.manager_level in ('level2', 'level3'):
                 super().action_confirm()
             else:
-                self.state = 'waiting_approval'
+                self.write({'state': 'waiting_approval'})
                 raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
         else:
             if self.partner_id.manager_level == 'level3':
                 super().action_confirm()
             else:
-                self.state = 'waiting_approval'
+                self.write({'state': 'waiting_approval'})
                 raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
 
 
