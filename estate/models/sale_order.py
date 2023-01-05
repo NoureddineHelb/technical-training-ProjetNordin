@@ -8,6 +8,13 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     manager_level = fields.Selection(related='partner_id.manager_level')
+    state = fields.Selection([
+        ('draft', 'Brouillon'),
+        ('waiting_approval', 'En attente d\'approbation'),
+        ('approved', 'Approuvé'),
+        ('done', 'Terminé'),
+        ('cancel', 'Annulé'),
+    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
