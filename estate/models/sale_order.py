@@ -84,4 +84,6 @@ class SaleOrder(models.Model):
 
         if self._check_manager_level():
             super().action_confirm()
+        else:
+            self.write({'state': 'waiting_approval'})
         self._check_max_order_amount()
