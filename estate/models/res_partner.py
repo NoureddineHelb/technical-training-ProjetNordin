@@ -10,3 +10,4 @@ class ResPartner(models.Model):
         ('level2', 'Niveau 2'),
         ('level3', 'Niveau 3'),
     ], string='Niveau de gestionnaire', default='none')
+    max_order_amount = fields.Float(string='Montant maximum de commande')
