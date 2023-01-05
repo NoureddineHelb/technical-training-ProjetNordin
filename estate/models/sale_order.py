@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from django.core.exceptions import ValidationError
+from odoo.exceptions import ValidationError
 from odoo import api, models, fields
 
 
