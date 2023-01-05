@@ -77,8 +77,8 @@ class SaleOrder(models.Model):
     def check_and_confirm_order(self):
         if self._check_manager_level():
             super().action_confirm()
-        else:
-            self.write({'state': 'waiting_approval'})
+            return True
+        return False
 
     def action_confirm(self):
         for line in self.order_line:
