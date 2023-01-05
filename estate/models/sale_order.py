@@ -50,13 +50,15 @@ class SaleOrder(models.Model):
                 return True
             else:
                 # affichage d'un message a l'ecran
-                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
+                raise ValidationError(
+                    "La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
                 return False
         elif 2000 <= self.amount_total < 5000:
             if self.partner_id.manager_level in ('level2', 'level3'):
                 return True
             else:
-                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
+                raise ValidationError(
+                    "La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
                 return False
         else:
             if self.partner_id.manager_level == 'level3':
@@ -67,7 +69,8 @@ class SaleOrder(models.Model):
 
     def _check_max_order_amount(self):
         for order in self:
-            if order.partner_id.user_ids and 'partenaires' in [group.name for group in order.partner_id.user_ids[0].groups_id]:
+            if order.partner_id.user_ids and 'partenaires' in [group.name for group in
+                                                               order.partner_id.user_ids[0].groups_id]:
                 max_order_amount = 250
             else:
                 max_order_amount = order.partner_id.max_order_amount
@@ -77,8 +80,8 @@ class SaleOrder(models.Model):
     def check_and_confirm_order(self):
         if self._check_manager_level():
             super().action_confirm()
-            return True
-        return False
+        else:
+            self.state = "waiting_approval"
 
     def action_confirm(self):
         for line in self.order_line:
@@ -87,4 +90,3 @@ class SaleOrder(models.Model):
 
         self.check_and_confirm_order()
         self._check_max_order_amount()
-
