@@ -18,7 +18,7 @@ class SaleOrder(models.Model):
 
     def _create_calendar_event(self, line):
         if not line.training_date:
-            raise ValueError("La date est manquante ou invalide.")
+            raise ValidationError("La date est manquante ou invalide.")
         start_datetime = fields.Datetime.to_string(line.training_date)
         end_datetime = fields.Datetime.from_string(start_datetime) + timedelta(hours=8)
         if line.employee_id.user_id:
