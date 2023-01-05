@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.core.exceptions import ValidationError
 from odoo import api, models, fields
 
 
@@ -29,10 +30,33 @@ class SaleOrder(models.Model):
                 event = self.env['calendar.event'].create(vals)
                 if not event:
                     raise ValueError("L'événement n'a pas été créé correctement !")
-                if event.partner_ids != [(4, line.employee_id.id)] or event.participant_ids != [
-                    (4, line.employee_id.id)]:
+                if event.partner_ids != [(4, line.employee_id.id)] != [(4, line.employee_id.id)]:
                     raise ValueError("L'événement n'a pas été attribué correctement aux participants !")
 
-
-
-
+        # Question 2
+        if self.amount_total < 500:
+            # Confirmer la commande de vente directement
+            super().action_confirm()
+        elif 500 <= self.amount_total < 2000:
+            if self.partner_id.manager_level in ('level1', 'level2', 'level3'):
+                # Confirmer la commande de vente
+                super().action_confirm()
+            else:
+                # Afficher un message d'erreur
+                raise ValidationError(
+                    "La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
+        elif 2000 <= self.amount_total < 5000:
+            if self.partner_id.manager_level in ('level2', 'level3'):
+                # Confirmer la commande de vente
+                super().action_confirm()
+            else:
+                # Afficher un message d'erreur
+                raise ValidationError(
+                    "La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
+        else:
+            if self.partner_id.manager_level == 'level3':
+                # Confirmer la commande de vente
+                super().action_confirm()
+            else:
+                # Afficher un message d'erreur
+                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
