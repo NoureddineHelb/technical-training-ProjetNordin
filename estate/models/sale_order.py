@@ -60,7 +60,11 @@ class SaleOrder(models.Model):
 
         # Question 3
         for order in self:
-            if order.partner_id.max_order_amount and order.amount_total > order.partner_id.max_order_amount:
+            if order.partner_id.user_ids and 'partenaires' in [group.name for group in order.partner_id.user_ids[0].groups_id]:
+                max_order_amount = 250
+            else:
+                max_order_amount = order.partner_id.max_order_amount
+            if max_order_amount and order.amount_total > max_order_amount:
                 raise ValidationError(
                     'Le montant de cette commande de vente dépasse le montant maximum autorisé pour ce partenaire.')
         return super().action_confirm()
