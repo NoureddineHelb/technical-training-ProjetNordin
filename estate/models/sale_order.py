@@ -52,7 +52,6 @@ class SaleOrder(models.Model):
             else:
                 # message d'erreur
                 self.write({'state': 'waiting_approval'})
-                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
 
         elif 2000 <= self.amount_total < 5000:
             if self.partner_id.manager_level in ('level2', 'level3'):
