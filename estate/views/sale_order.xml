@@ -21,7 +21,7 @@
                     <field name="manager_level" readonly="1"/>
                 </field>
                 <button name="action_confirm" position="after">
-                    <button name="action_confirm" string="Confirmer la commande" type="object"/>
+                    <button string="Demander l'approbation" type="object" name="action_confirm" class="oe_highlight"/>
                 </button>
             </field>
         </record>

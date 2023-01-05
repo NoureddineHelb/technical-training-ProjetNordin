@@ -69,5 +69,27 @@ class SaleOrder(models.Model):
                 self._create_calendar_event(line)
 
         if self._check_manager_level():
+            # trouvez le manager à qui envoyer le message
+            manager = self.env['res.users'].search([('id', '=', self.env.uid)])
+
+            # créez un message avec le modèle de discussion
+            message = self.env['mail.message'].create({
+                'subject': 'Demande d approbation de commande de vente',
+                'body': 'Veuillez approuver la commande de vente n°%s pour un montant de %s' % (self.name, self.amount_total),
+                'author_id': self.env.user.partner_id.id,
+                'partner_ids': [(4, manager.partner_id.id)],
+                'model': 'sale.order',
+                'res_id': self.id,
+            })
+
+            # envoie une notification au manager avec le message
+            self.env['mail.thread']._notify(
+                message_type='comment',
+                record_name=self.name,
+                res_id=self.id,
+                partner_ids=manager.partner_id.ids,
+                body=message.body,
+            )
+
             super().action_confirm()
-        self._check_max_order_amount()
+            self._check_max_order_amount()
