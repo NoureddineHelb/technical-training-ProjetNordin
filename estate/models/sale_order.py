@@ -52,18 +52,21 @@ class SaleOrder(models.Model):
                 # message d'erreur
                 self.write({'state': 'waiting_approval'})
                 raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
+                return False
         elif 2000 <= self.amount_total < 5000:
             if self.partner_id.manager_level in ('level2', 'level3'):
                 return True
             else:
                 self.write({'state': 'waiting_approval'})
                 raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
+                return False
         else:
             if self.partner_id.manager_level == 'level3':
                 return True
             else:
                 self.write({'state': 'waiting_approval'})
                 raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
+                return False
 
     def _check_max_order_amount(self):
         for order in self:
