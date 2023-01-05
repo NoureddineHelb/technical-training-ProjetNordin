@@ -44,20 +44,22 @@ class SaleOrder(models.Model):
                 super().action_confirm()
             else:
                 # message d'erreur
-                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
                 self.state = 'waiting_approval'
+                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
+
         elif 2000 <= self.amount_total < 5000:
             if self.partner_id.manager_level in ('level2', 'level3'):
                 super().action_confirm()
             else:
-                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
                 self.state = 'waiting_approval'
+                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
         else:
             if self.partner_id.manager_level == 'level3':
                 super().action_confirm()
             else:
-                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
                 self.state = 'waiting_approval'
+                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
+
 
         # Question 3
         for order in self:
