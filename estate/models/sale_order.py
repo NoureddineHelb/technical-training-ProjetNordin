@@ -17,6 +17,8 @@ class SaleOrder(models.Model):
     ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
 
     def _create_calendar_event(self, line):
+        if not line.training_date:
+            raise ValueError("La date est manquante ou invalide.")
         start_datetime = fields.Datetime.to_string(line.training_date)
         end_datetime = fields.Datetime.from_string(start_datetime) + timedelta(hours=8)
         if line.employee_id.user_id:
@@ -48,15 +50,14 @@ class SaleOrder(models.Model):
                 return True
             else:
                 # message d'erreur
-                self.state = 'waiting_approval'
+                self.write({'state': 'waiting_approval'})
                 raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
         elif 2000 <= self.amount_total < 5000:
             if self.partner_id.manager_level in ('level2', 'level3'):
                 return True
             else:
                 self.write({'state': 'waiting_approval'})
-                raise ValidationError(
-                    "La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
+                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
         else:
             if self.partner_id.manager_level == 'level3':
                 return True
