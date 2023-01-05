@@ -37,28 +37,30 @@ class SaleOrder(models.Model):
 
         # Question 2
         if self.amount_total < 500:
-            # Confirmer la commande de vente directement
+            # confirme la commande direct
             super().action_confirm()
         elif 500 <= self.amount_total < 2000:
             if self.partner_id.manager_level in ('level1', 'level2', 'level3'):
-                # Confirmer la commande de vente
                 super().action_confirm()
             else:
-                # Afficher un message d'erreur
+                # message d'erreur
                 raise ValidationError(
                     "La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
         elif 2000 <= self.amount_total < 5000:
             if self.partner_id.manager_level in ('level2', 'level3'):
-                # Confirmer la commande de vente
                 super().action_confirm()
             else:
-                # Afficher un message d'erreur
                 raise ValidationError(
                     "La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
         else:
             if self.partner_id.manager_level == 'level3':
-                # Confirmer la commande de vente
                 super().action_confirm()
             else:
-                # Afficher un message d'erreur
                 raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
+
+        # Question 3
+        for order in self:
+            if order.partner_id.max_order_amount and order.amount_total > order.partner_id.max_order_amount:
+                raise ValidationError(
+                    'Le montant de cette commande de vente dépasse le montant maximum autorisé pour ce partenaire.')
+        return super().action_confirm()
