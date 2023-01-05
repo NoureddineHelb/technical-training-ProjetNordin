@@ -7,6 +7,8 @@ from odoo import api, models, fields
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    manager_level = fields.Selection(related='partner_id.manager_level')
+
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for line in self.order_line:
