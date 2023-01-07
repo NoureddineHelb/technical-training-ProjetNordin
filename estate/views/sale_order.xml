@@ -7,23 +7,21 @@
             <field name="inherit_id" ref="sale.view_order_form" />
             <field name="arch" type="xml">
                 <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='tax_id']" position="after">
-                    <field name="training_date" />
-                    <field name="employee_id" required="1"/>
+                    <field name="training_date" position="after" string="Date de formation"/>
+                    <field name="employee_id" position="after" string="Employé affecté à la formation"/>
                 </xpath>
             </field>
-        </record>
-        <record id="view_order_form_inherited" model="ir.ui.view">
-            <field name="name">Vue de formulaire de commande de vente</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <field name="partner_id" position="after">
-                    <field name="manager_level" readonly="1"/>
-                </field>
-                <button name="action_confirm" position="after">
-                    <button string="Demander l'approbation" type="object" name="action_confirm" class="oe_highlight"/>
-                </button>
-            </field>
+            <!-- Ajout des champs de date de formation et d'employé affecté à la formation dans le rapport de devis -->
+            <t t-foreach="docs" t-as="o">
+                <!-- ... -->
+                <t t-foreach="o.order_line" t-as="l">
+                    <!-- ... -->
+                    <td><span t-field="l.training_date"/></td>
+                    <td><span t-field="l.employee_id.name"/></td>
+                    <!-- ... -->
+                </t>
+                <!-- ... -->
+            </t>
         </record>
     </data>
 </odoo>
