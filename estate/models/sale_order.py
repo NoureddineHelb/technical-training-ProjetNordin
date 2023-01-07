@@ -13,10 +13,12 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_confirm()
         for line in self.order_line:
             if line.training_date and line.employee_id:
-                self.env['calendar.event'].create({
-                    'name': 'Formation Odoo',
-                    'start_date': line.training_date,
-                    'stop_date': line.training_date,
-                    'partner_id': line.employee_id.partner_id.id,
-                })
+                employee = self.env['hr.employee'].browse(line.employee_id.id)
+                if employee.partner_id:
+                    self.env['calendar.event'].create({
+                        'name': 'Formation Odoo',
+                        'start_date': line.training_date,
+                        'stop_date': line.training_date,
+                        'partner_id': employee.partner_id.id,
+                    })
         return res

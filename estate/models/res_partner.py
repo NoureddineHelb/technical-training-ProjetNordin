@@ -4,6 +4,7 @@ from odoo import fields, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    employee_ids = fields.One2many(comodel_name='hr.employee', inverse_name='partner_id', string='Employees')
     manager_level = fields.Selection([
         ('none', 'Aucun'),
         ('level1', 'Niveau 1'),
