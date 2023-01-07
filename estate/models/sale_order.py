@@ -18,5 +18,6 @@ class SaleOrder(models.Model):
                     'start_date': line.training_date,
                     'stop_date': line.training_date,
                     'partner_id': line.employee_id.partner_id.id,
+                    'attendee_ids': [(4, line.employee_id.partner_id.id)],
                 })
         return res
