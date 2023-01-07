@@ -8,6 +8,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     manager_level = fields.Selection(related='partner_id.manager_level')
+    calendar_event_id = fields.Many2one('hr.employee', comodel_name='calendar.event', string='Calendar Event')
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
