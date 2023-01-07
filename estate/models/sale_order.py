@@ -1,3 +1,4 @@
+#sale_order.py :
 from datetime import timedelta
 
 from odoo.exceptions import ValidationError
@@ -16,11 +17,11 @@ class SaleOrder(models.Model):
                 raise ValidationError("La date est manquante ou invalide.")
             start_datetime = fields.Datetime.to_string(line.training_date)
             end_datetime = fields.Datetime.from_string(start_datetime) + timedelta(hours=8)
-            if line.training_date and line.employee_id:
-                # Créez un partenaire pour l'employé sélectionné
-                partner = self.env['res.partner'].create({'name': line.employee_id.name})
-                # Affectez le partenaire à l'employé sélectionné
-                line.employee_id.partner_id = partner
+            if line.employee_id:
+                # Cherchez le partenaire de l'employé sélectionné
+                partner = self.env['res.partner'].search([('employee_ids', '=', line.employee_id.id)], limit=1)
+                if not partner:
+                    raise ValidationError("L'employé sélectionné n'a pas de partenaire ")
                 self.env['calendar.event'].create({
                     'name': 'Formation Odoo',
                     'start_date': start_datetime,
@@ -28,4 +29,6 @@ class SaleOrder(models.Model):
                     'partner_id': partner.id,
                     'attendee_ids': [(4, partner.id)],
                 })
+            else:
+                raise ValidationError("L'employé sélectionné n'existe pas.")
         return res
