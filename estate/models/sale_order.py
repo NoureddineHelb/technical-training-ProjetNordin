@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for line in self.order_line:
-            if line.training_date and line.employee_id:
+            if line.employee_id.partner_id:
                 self.env['calendar.event'].create({
                     'name': 'Formation Odoo',
                     'start_date': line.training_date,
@@ -20,4 +20,6 @@ class SaleOrder(models.Model):
                     'partner_id': line.employee_id.partner_id.id,
                     'attendee_ids': [(4, line.employee_id.partner_id.id)],
                 })
+            else:
+                raise ValidationError("L'employé sélectionné n'a pas de partenaire associé.")
         return res
