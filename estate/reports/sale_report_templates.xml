@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
-            
+        <template id="report_saleorder_document_inherit" inherit_id="sale.report_saleorder_document">
+            <!-- Ajout des champs de date de formation et d'employé affecté à la formation dans le rapport de devis -->
+            <t t-foreach="docs" t-as="o">
+                <!-- ... -->
+                <t t-foreach="o.order_line" t-as="l">
+                    <!-- ... -->
+                    <td><span t-field="l.training_date"/></td>
+                    <td><span t-field="l.employee_id.name"/></td>
+                    <!-- ... -->
+                </t>
+                <!-- ... -->
+            </t>
         </template>
     </data>
 </odoo>

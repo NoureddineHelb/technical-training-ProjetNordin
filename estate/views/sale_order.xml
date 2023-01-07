@@ -11,17 +11,6 @@
                     <field name="employee_id" position="after" string="Employé affecté à la formation"/>
                 </xpath>
             </field>
-            <!-- Ajout des champs de date de formation et d'employé affecté à la formation dans le rapport de devis -->
-            <t t-foreach="docs" t-as="o">
-                <!-- ... -->
-                <t t-foreach="o.order_line" t-as="l">
-                    <!-- ... -->
-                    <td><span t-field="l.training_date"/></td>
-                    <td><span t-field="l.employee_id.name"/></td>
-                    <!-- ... -->
-                </t>
-                <!-- ... -->
-            </t>
         </record>
     </data>
 </odoo>
