@@ -17,12 +17,14 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             # Si une date de formation et un employé sont sélectionnés pour la ligne de commande
             if line.training_date and line.employee_id:
+                # Récupération de l'adresse du domicile de l'employé
+                employee_home_address = line.employee_id.address_home_id
                 # Création de l'événement dans le calendrier de l'employé
                 self.env['calendar.event'].create({
                     'name': 'Formation Odoo',
                     'start_date': line.training_date,
                     'stop_date': line.training_date,
-                    'partner_ids': [(4, line.employee_id.address_home_id.id)],
+                    'partner_ids': [(4, employee_home_address.id)],
                 })
         # Renvoi du résultat de la méthode originale
         return res
