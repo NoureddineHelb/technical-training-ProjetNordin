@@ -9,6 +9,6 @@
     'category': 'Uncategorized',
     'version': '16.0.0.1',
     'license': 'LGPL-3',
-    'depends': ['base', 'sale_management', 'calendar', 'hr'],
+    'depends': ['base', 'sale_management', 'calendar', 'hr', 'calendar.attendee'],
     'data': ["views/res_groups.xml", "views/res_partner.xml", "views/sale_order.xml"]
 }
