@@ -42,7 +42,7 @@ class SaleOrder(models.Model):
                 if event.partner_ids != [(4, line.employee_id.id)] != [(4, line.employee_id.id)]:
                     raise ValidationError("L'événement n'a pas été attribué correctement aux participants !")
 
-            #Question 2
+            # Question 2
             user_groups = self.env.user.groups_id
             if self.amount_total < 500:
                 # confirme la commande direct
@@ -66,7 +66,7 @@ class SaleOrder(models.Model):
                 else:
                     raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
 
-            #Question 3
+            # Question 3
             if 'partner' in [group.user_type for group in user_groups] and self.amount_total > 350:
                 raise ValidationError("Les partenaires ne peuvent pas passer de commande de plus de 350.")
 
@@ -76,15 +76,18 @@ class SaleOrder(models.Model):
         for order in self:
             for group in self.env.user.groups_id:
                 if group.user_type != 'manager_3' or group.user_type != 'manager_2' or group.user_type != 'manager_1':
-                    summary = "Demande d'approbation de la commande %s" % order.name
-                    body = "Une commande de vente a été soumise à votre approbation. Veuillez vérifier les détails de la commande et confirmer ou refuser sa validation. "
-                    self.env['mail.activity'].create({
-                        'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
-                        'note': body,
-                        'summary': summary,
-                        'res_id': order.id,
-                        'res_model_id': self.env.ref('sale.model_sale_order').id,
-                        'user_id': self.env.user.id,
-                    })
+                    manager_1_groups = self.env['res.groups'].search([('user_type', '=', 'manager_1')])
+                    manager_1_users = self.env['res.users'].search([('groups_id', 'in', manager_1_groups.ids)])
+                    if manager_1_users:
+                        # Envoyer l'activité au premier manager_1 trouvé
+                        summary = "Demande d'approbation de la commande %s" % order.name
+                        body = "Une commande de vente a été soumise à votre approbation. Veuillez vérifier les détails de la commande et confirmer ou refuser sa validation. "
+                        self.env['mail.activity'].create({
+                            'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+                            'note': body,
+                            'summary': summary,
+                            'res_id': order.id,
+                            'res_model_id': self.env.ref('sale.model_sale_order').id,
+                            'user_id': manager_1_users[0].id,
+                        })
             return True
-
