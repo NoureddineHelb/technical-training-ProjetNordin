@@ -62,3 +62,8 @@ class SaleOrder(models.Model):
                 else:
                     raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
         return res
+
+    def action_done(self):
+        if self.state == "quotation" and self.user_has_groups('base.manager'):
+            self._set_state("done")
+            super().action_confirm()
