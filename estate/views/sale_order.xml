@@ -12,5 +12,19 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_order_form_inherited" model="ir.ui.view">
+            <field name="name">Vue de formulaire de commande de vente</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="manager_level" readonly="1"/>
+                </field>
+                <button name="action_confirm" position="after">
+                    <button name="action_confirm" string="Confirmer la commande" type="object"/>
+                </button>
+            </field>
+        </record>
     </data>
 </odoo>

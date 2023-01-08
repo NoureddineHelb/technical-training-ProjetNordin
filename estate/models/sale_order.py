@@ -42,22 +42,22 @@ class SaleOrder(models.Model):
 
         if self.amount_total < 500:
             # confirme la commande direct
-            return True
+            super().action_confirm()
         elif 500 <= self.amount_total < 2000:
             if self.partner_id.manager_level in ('level1', 'level2', 'level3'):
-                return True
+                super().action_confirm()
             else:
                 # message d'erreur
                 raise ValidationError(
                     "La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
         elif 2000 <= self.amount_total < 5000:
             if self.partner_id.manager_level in ('level2', 'level3'):
-                return True
+                super().action_confirm()
             else:
                 raise ValidationError(
                     "La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
         else:
             if self.partner_id.manager_level == 'level3':
-                return True
+                super().action_confirm()
             else:
                 raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
