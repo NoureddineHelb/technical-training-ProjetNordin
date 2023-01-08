@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <field name="user_type" required="1" default_focus="1">
-            <selection>
-                <option value="admin">Admin</option>
-                <option value="manager">Manager</option>
-                <option value="partner">Partner</option>
-            </selection>
-        </field>
+        <record id="group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="user_type">manager</field>
+        </record>
+        <record id="group_partner" model="res.groups">
+            <field name="name">Partner</field>
+            <field name="user_type">partner</field>
+        </record>
     </data>
 </odoo>
