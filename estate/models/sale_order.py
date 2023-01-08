@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
                     'name': 'Formation Odoo',
                     'start_date': start_datetime,
                     'stop_date': end_datetime,
-                    'partner_id': partner.id,
+                    'partner_ids': [(4, employee_id)],
                     'attendee_ids': attendee_ids,
                 })
             else:
