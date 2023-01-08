@@ -5,14 +5,8 @@ from odoo import api, models, fields
 
 
 class SaleOrder(models.Model):
-    _name = 'sale.order'
     _inherit = 'sale.order'
 
-    approval_state = fields.Selection([
-        ('pending', 'Pending'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
-    ], string='Approval State', default='pending')
     manager_level = fields.Selection(related='partner_id.manager_level')
 
     def action_confirm(self):
@@ -46,9 +40,24 @@ class SaleOrder(models.Model):
                     raise ValidationError("L'événement n'a pas été attribué correctement aux participants !")
         return res
 
-    def action_approve(self):
-        for order in self:
-            if self.self.env.user.has_group('sales_team.group_sale_manager'):
-                order.approval_state = 'approved'
+        if self.amount_total < 500:
+            # confirme la commande direct
+            return True
+        elif 500 <= self.amount_total < 2000:
+            if self.partner_id.manager_level in ('level1', 'level2', 'level3'):
+                return True
             else:
-                raise ValidationError("Only managers can approve sales orders.")
+                # message d'erreur
+                raise ValidationError(
+                    "La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
+        elif 2000 <= self.amount_total < 5000:
+            if self.partner_id.manager_level in ('level2', 'level3'):
+                return True
+            else:
+                raise ValidationError(
+                    "La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
+        else:
+            if self.partner_id.manager_level == 'level3':
+                return True
+            else:
+                raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")

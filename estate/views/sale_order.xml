@@ -12,19 +12,5 @@
                 </xpath>
             </field>
         </record>
-
-        <record id="view_sale_order_form" model="ir.ui.view">
-            <field name="model_id" ref="technical_training_projetnordin.model_res_groups"/>
-            <field name="name">sale.order.form</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="arch" type="xml">
-                <field name="approval_state" position="after">
-                    <field name="partner_id"/>
-                </field>
-                <button name="action_approve" string="Approve" type="object" class="oe_highlight"
-                    attrs="{'invisible': [('approval_state', 'in', ['approved', 'rejected'])]}"/>
-            </field>
-        </record>
     </data>
 </odoo>

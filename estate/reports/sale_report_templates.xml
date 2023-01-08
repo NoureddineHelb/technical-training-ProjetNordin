@@ -14,23 +14,5 @@
                 <!-- ... -->
             </t>
         </template>
-
-        <template id="approved_sales_orders_report_template" inherit_id="sale.report_saleorder_document">
-            <xpath expr="//table[@class='table table-condensed']" position="before">
-                <h2>Approved Sales Orders</h2>
-            </xpath>
-            <xpath expr="//table[@class='table table-condensed']" position="attributes">
-                <attribute name="t-if">order.approval_state == 'approved'</attribute>
-            </xpath>
-        </template>
-
-        <template id="rejected_sales_orders_report_template" inherit_id="sale.report_saleorder_document">
-            <xpath expr="//table[@class='table table-condensed']" position="before">
-                <h2>Rejected Sales Orders</h2>
-            </xpath>
-            <xpath expr="//table[@class='table table-condensed']" position="attributes">
-                <attribute name="t-if">order.approval_state == 'rejected'</attribute>
-            </xpath>
-        </template>
     </data>
 </odoo>
