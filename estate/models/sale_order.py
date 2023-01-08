@@ -22,14 +22,14 @@ class SaleOrder(models.Model):
                 raise ValidationError("L'employé sélectionné n'a pas de partenaire ")
             if line.employee_id:
                 employee_id = line.employee_id.id
-                attendee_ids = [(4, employee_id, line.employee_id.name)]
                 self.env['calendar.event'].create({
                     'name': 'Formation Odoo',
                     'start_date': start_datetime,
                     'stop_date': end_datetime,
                     'partner_ids': [(4, employee_id)],
-                    'attendee_ids': attendee_ids,
+                    'attendee_ids': [(4, employee_id)],
                 })
             else:
                 raise ValidationError("L'employé sélectionné n'existe pas.")
+
         return res
