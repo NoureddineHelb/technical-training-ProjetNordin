@@ -74,13 +74,17 @@ class SaleOrder(models.Model):
 
     def request_approval(self):
         for order in self:
-            if order.user_id != order.user_id:
-                for group in self.env['res.groups'].search(
-                        [('user_type', 'in', ('manager_1'))]):
-                    order.activity_schedule(
-                        'sale.mail_act_sale_order_approval',
-                        group_id=group.id,
-                        user_id=order.user_id.id
-                    )
-            else:
-                raise ValidationError("Vous pouvez déjà confirmer cette commande.")
+            for group in self.env.user.groups_id:
+                if group.user_type != 'manager_3' or group.user_type != 'manager_2' or group.user_type != 'manager_1':
+                    summary = "Demande d'approbation de la commande %s" % order.name
+                    body = "Une commande de vente a été soumise à votre approbation. Veuillez vérifier les détails de la commande et confirmer ou refuser sa validation. "
+                    self.env['mail.activity'].create({
+                        'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+                        'note': body,
+                        'summary': summary,
+                        'res_id': order.id,
+                        'res_model_id': self.env.ref('sale.model_sale_order').id,
+                        'user_id': self.env.user.id,
+                    })
+            return True
+
