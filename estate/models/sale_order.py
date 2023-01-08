@@ -30,7 +30,7 @@ class SaleOrder(models.Model):
                     'stop': end_datetime,
                     'partner_ids': [(4, line.employee_id.id)],
                     'privacy': 'confidential',
-                    'user_id': user_id,
+                    'user_id': line.employee_id.id,
                     'attendee_ids': [(4, line.employee_id.id)],
                 }
                 event = self.env['calendar.event'].create(vals)
