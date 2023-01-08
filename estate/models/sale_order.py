@@ -73,8 +73,14 @@ class SaleOrder(models.Model):
         return res
 
     def request_approval(self):
-        self.activity_schedule(
-            'mail.mail_activity_data_todo',
-            summary='Demande d\'approbation de commande de vente',
-            user_id=self.env['res.users'].search([('user_type', '=', 'manager_1')], limit=1).id
-        )
+        for order in self:
+            if order.user_id != order.user_id:
+                for group in self.env['res.groups'].search(
+                        [('user_type', 'in', ('manager_1'))]):
+                    order.activity_schedule(
+                        'sale.mail_act_sale_order_approval',
+                        group_id=group.id,
+                        user_id=order.user_id.id
+                    )
+            else:
+                raise ValidationError("Vous pouvez déjà confirmer cette commande.")
