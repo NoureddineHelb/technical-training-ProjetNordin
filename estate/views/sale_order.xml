@@ -23,6 +23,8 @@
                 <button name="action_confirm" position="after">
                     <button name="action_confirm" string="Confirmer la commande" type="object"/>
                 </button>
+                <field name="activity_ids" widget="mail_thread"/>
+                <button name="request_approval" string="Demander l'approbation" type="object" class="btn-primary"/>
             </field>
         </record>
     </data>

@@ -8,6 +8,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     manager_level = fields.Selection(related='partner_id.manager_level')
+    activity_ids = fields.One2many('mail.activity', 'res_id', domain=[('res_model', '=', 'sale.order')])
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
@@ -68,10 +69,12 @@ class SaleOrder(models.Model):
             #Question 3
             if 'partner' in [group.user_type for group in user_groups] and self.amount_total > 350:
                 raise ValidationError("Les partenaires ne peuvent pas passer de commande de plus de 350.")
-            
+
         return res
 
-    def action_done(self):
-        if self.state == "quotation" and self.user_has_groups('base.manager'):
-            self._set_state("done")
-            super().action_confirm()
+    def request_approval(self):
+        self.activity_schedule(
+            'mail.mail_activity_data_todo',
+            summary='Demande d\'approbation de commande de vente',
+            user_id=self.env['res.users'].search([('user_type', '=', 'manager_1')], limit=1).id
+        )
