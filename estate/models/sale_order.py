@@ -31,7 +31,7 @@ class SaleOrder(models.Model):
                     'partner_ids': [(4, line.employee_id.id)],
                     'privacy': 'confidential',
                     'user_id': user_id,
-                    'attendee_ids': user_id,
+                    'attendee_ids': [(4, line.employee_id.id)],
                 }
                 event = self.env['calendar.event'].create(vals)
                 if not event:
