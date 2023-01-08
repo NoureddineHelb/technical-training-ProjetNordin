@@ -11,6 +11,8 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
+
+        # Question 1
         for line in self.order_line:
             if line.employee_id:
                 if not line.training_date:
@@ -39,6 +41,7 @@ class SaleOrder(models.Model):
                 if event.partner_ids != [(4, line.employee_id.id)] != [(4, line.employee_id.id)]:
                     raise ValidationError("L'événement n'a pas été attribué correctement aux participants !")
 
+            #Question 2
             user_groups = self.env.user.groups_id
             if self.amount_total < 500:
                 # confirme la commande direct
@@ -62,6 +65,10 @@ class SaleOrder(models.Model):
                 else:
                     raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
 
+            #Question 3
+            if 'partner' in [group.user_type for group in user_groups] and self.amount_total > 350:
+                raise ValidationError("Les partenaires ne peuvent pas passer de commande de plus de 350.")
+            
         return res
 
     def action_done(self):
