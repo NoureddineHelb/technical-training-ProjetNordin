@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="group_manager" model="res.groups">
-            <field name="name">Manager</field>
-            <field name="user_type">manager</field>
+        <record id="group_manager_1" model="res.groups">
+            <field name="name">Manager Level 1</field>
+            <field name="user_type">manager_1</field>
+        </record>
+        <record id="group_manager_2" model="res.groups">
+            <field name="name">Manager Level 2</field>
+            <field name="user_type">manager_2</field>
+        </record>
+        <record id="group_manager_3" model="res.groups">
+            <field name="name">Manager Level 3</field>
+            <field name="user_type">manager_3</field>
         </record>
         <record id="group_partner" model="res.groups">
             <field name="name">Partner</field>
