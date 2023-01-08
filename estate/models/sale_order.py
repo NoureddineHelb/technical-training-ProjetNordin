@@ -44,20 +44,20 @@ class SaleOrder(models.Model):
                 # confirme la commande direct
                 super().action_confirm()
             elif 500 <= self.amount_total < 2000:
-                if self.partner_id.user_type in ('manager_1', 'manager_2', 'manager_3'):
+                if self.user_type in ('manager_1', 'manager_2', 'manager_3'):
                     super().action_confirm()
                 else:
                     # message d'erreur
                     raise ValidationError(
                         "La commande de vente doit être confirmée par un manager de niveau 1 ou supérieur")
             elif 2000 <= self.amount_total < 5000:
-                if self.partner_id.user_type in ('manager_2', 'manager_3'):
+                if self.user_type in ('manager_2', 'manager_3'):
                     super().action_confirm()
                 else:
                     raise ValidationError(
                         "La commande de vente doit être confirmée par un manager de niveau 2 ou supérieur")
             else:
-                if self.partner_id.user_type == 'manager_3':
+                if self.user_type == 'manager_3':
                     super().action_confirm()
                 else:
                     raise ValidationError("La commande de vente doit être confirmée par un manager de niveau 3")
