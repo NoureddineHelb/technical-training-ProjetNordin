@@ -48,7 +48,7 @@ class SaleOrder(models.Model):
 
     def action_approve(self):
         for order in self:
-            if self.user_has_groups('sales_team.group_sale_manager'):
+            if self.self.env.user.has_group('sales_team.group_sale_manager'):
                 order.approval_state = 'approved'
             else:
                 raise ValidationError("Only managers can approve sales orders.")
