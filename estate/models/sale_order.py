@@ -24,13 +24,14 @@ class SaleOrder(models.Model):
                     user_id = line.employee_id.user_id.id
                 else:
                     user_id = self.env.user.id
+                employee_id = line.employee_id.id
                 vals = {
                     'name': 'Formation - %s' % line.name,
                     'start': start_datetime,
                     'stop': end_datetime,
                     'partner_ids': [(4, line.employee_id.id)],
                     'privacy': 'confidential',
-                    'user_id': user_id,
+                    'user_id': employee_id,
                     'attendee_ids': [(4, line.employee_id.id)],
                 }
                 event = self.env['calendar.event'].create(vals)
