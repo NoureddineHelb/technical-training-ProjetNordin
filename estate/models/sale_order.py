@@ -1,4 +1,3 @@
-#sale_order.py :
 from datetime import timedelta
 
 from odoo.exceptions import ValidationError
@@ -18,8 +17,8 @@ class SaleOrder(models.Model):
             start_datetime = fields.Datetime.to_string(line.training_date)
             end_datetime = fields.Datetime.from_string(start_datetime) + timedelta(hours=8)
             if line.employee_id:
-                # Cherchez le partenaire de l'employé sélectionné
-                partner = self.env['res.partner'].search([('employee_ids', '=', line.employee_id.id)], limit=1)
+                # recherche le partenaire de l'employé sélectionné selon le nom
+                partner = self.env['res.partner'].search([('name', '=', line.employee_id.name)], limit=1)
                 if not partner:
                     raise ValidationError("L'employé sélectionné n'a pas de partenaire ")
                 self.env['calendar.event'].create({
