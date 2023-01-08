@@ -5,8 +5,14 @@ from odoo import api, models, fields
 
 
 class SaleOrder(models.Model):
+    _name = 'sale.order'
     _inherit = 'sale.order'
 
+    approval_state = fields.Selection([
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ], string='Approval State', default='pending')
     manager_level = fields.Selection(related='partner_id.manager_level')
 
     def action_confirm(self):
@@ -31,11 +37,18 @@ class SaleOrder(models.Model):
                     'partner_ids': [(4, line.employee_id.id)],
                     'privacy': 'confidential',
                     'user_id': user_id,
-                    'attendee_ids': [(4, line.employee_id.user_id.id)],
+                    'attendee_ids': [(4, line.employee_id.id)],
                 }
                 event = self.env['calendar.event'].create(vals)
                 if not event:
-                    raise ValueError("L'événement n'a pas été créé correctement !")
+                    raise ValidationError("L'événement n'a pas été créé correctement !")
                 if event.partner_ids != [(4, line.employee_id.id)] != [(4, line.employee_id.id)]:
-                    raise ValueError("L'événement n'a pas été attribué correctement aux participants !")
+                    raise ValidationError("L'événement n'a pas été attribué correctement aux participants !")
         return res
+
+    def action_approve(self):
+        for order in self:
+            if self.user_has_groups('sales_team.group_sale_manager'):
+                order.approval_state = 'approved'
+            else:
+                raise ValidationError("Only managers can approve sales orders.")
