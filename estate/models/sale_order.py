@@ -75,7 +75,7 @@ class SaleOrder(models.Model):
     #Question 4
     def request_approval(self):
         for group in self.env.user.groups_id:
-            if group.user_type != 'manager_3' and group.user_type != 'manager_2' and group.user_type != 'manager_1':
+            if group.user_type != 'manager_3' or group.user_type != 'manager_2' or group.user_type != 'manager_1':
                 manager_1_groups = self.env['res.groups'].search([('user_type', '=', 'manager_1')])
                 manager_1_users = self.env['res.users'].search([('groups_id', 'in', manager_1_groups.ids)])
                 if manager_1_users:
