@@ -18,14 +18,11 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <field name="partner_id" position="after">
-                    <field name="manager_level" readonly="1"/>
-                </field>
+                <field name="activity_ids" widget="mail_thread"/>
                 <button name="action_confirm" position="after">
                     <button name="action_confirm" string="Confirmer la commande" type="object"/>
+                    <button name="request_approval" string="Demander l'approbation" type="object" class="btn-primary"/>
                 </button>
-                <field name="activity_ids" widget="mail_thread"/>
-                <button name="request_approval" string="Demander l'approbation" type="object" class="btn-primary"/>
             </field>
         </record>
     </data>
